@@ -1,0 +1,324 @@
+/* ==========================
+   RESET / BASE
+========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  background: #121212;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Links */
+a {
+  color: #ffd700;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+a:hover {
+  color: #ffea70;
+  text-decoration: underline;
+}
+
+/* Botões padrão */
+button {
+  background: #ffd700;
+  color: #121212;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+button:hover {
+  background: #ffea70;
+  transform: scale(1.03);
+}
+
+/* ==========================
+   LOGIN / CADASTRO
+========================== */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.box {
+  background: #1a1a1a;
+  padding: 25px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+}
+.input-group {
+  margin: 10px 0;
+  text-align: left;
+}
+.input-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
+.input-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ffd700;
+  border-radius: 6px;
+  background: #121212;
+  color: #ffffff;
+}
+.input-group input::placeholder {
+  color: #cccccc;
+}
+
+/* ==========================
+   APP PRINCIPAL
+========================== */
+.main {
+  display: flex;
+  height: 100vh;
+}
+
+/* ==========================
+   MENU
+========================== */
+.menu {
+  width: 220px;
+  background: #1a1a1a;
+  color: #ffd700;
+  padding: 20px;
+}
+
+.menu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  width: 100%;
+}
+
+.menu a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;          /* ocupa toda largura do menu */
+  height: 50px;         /* altura fixa para todos os itens */
+  min-width: 0;         /* previne expansão por texto grande */
+  padding: 0 12px;      /* padding horizontal */
+  background: #222222;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #ffd700;
+  white-space: nowrap;      /* impede quebra de linha */
+  overflow: hidden;         /* esconde excesso de texto */
+  text-overflow: ellipsis;  /* mostra "..." se o texto for grande */
+  transition: background 0.3s, color 0.3s;
+}
+
+.menu a:hover {
+  background: #ffd700;
+  color: #121212;
+}
+
+.menu a[href="#secaoPlanos"],
+.menu a[href="#secaoValores"] {
+  background: #ffd700;
+  color: #121212;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: #121212;
+  color: #ffffff;
+}
+
+/* ==========================
+   SEÇÃO INÍCIO
+========================== */
+.inicio h2 {
+  margin-bottom: 15px;
+  color: #ffd700;
+}
+.inicio-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.inicio-foto {
+  width: 180px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(255, 215, 0, 0.3);
+}
+
+/* ==========================
+   PRODUTOS
+========================== */
+.produtos h2 {
+  margin: 20px 0;
+  color: #ffd700;
+}
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.produto {
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 3px 6px rgba(255, 215, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.produto:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 3px 15px rgba(255, 215, 0, 0.4);
+}
+.produto img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.produto h3, .produto p {
+  color: #ffffff;
+}
+.produto p {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* ==========================
+   CARRINHO FLUTUANTE
+========================== */
+.cart-badge {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ffd700;
+  color: #121212;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 3px 6px rgba(255, 215, 0, 0.3);
+}
+
+.cart-sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 350px;
+  height: 100%;
+  background: #1a1a1a;
+  box-shadow: -2px 0 8px rgba(255, 215, 0, 0.2);
+  padding: 20px;
+  transition: right 0.3s ease-in-out;
+  z-index: 999;
+}
+.cart-sidebar.active {
+  right: 0;
+}
+.cart-sidebar h3 {
+  margin-bottom: 15px;
+  color: #ffd700;
+}
+.cart-items {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.cart-total {
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #ffd700;
+}
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+}
+.close-btn {
+  background: #121212;
+  color: #ffd700;
+}
+.close-btn:hover {
+  background: #1a1a1a;
+}
+.checkout-btn {
+  background: #ffd700;
+  color: #121212;
+}
+.checkout-btn:hover {
+  background: #ffea70;
+}
+
+/* ==========================
+   NOTIFICAÇÕES
+========================== */
+.notification {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: #1a1a1a;
+  color: #ffd700;
+  padding: 12px 18px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s, transform 0.4s;
+  transform: translateY(20px);
+  z-index: 1000;
+}
+.notification.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ==========================
+   PIX BOX
+========================== */
+.pix-box {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(255, 215, 0, 0.2);
+  max-width: 400px;
+}
+.pix-box textarea {
+  font-size: 14px;
+  padding: 8px;
+  border: 1px solid #ffd700;
+  border-radius: 6px;
+  resize: none;
+  background: #121212;
+  color: #ffffff;
+}
+.pix-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
