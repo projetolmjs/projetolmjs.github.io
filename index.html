@@ -1,1 +1,98 @@
-<h2>GIMENES É GAY</h2>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barbearia Brooklyn</title>
+  <link rel="icon" href="imagens/vetor.ico" sizes="32x32" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- ======================= TELAS DE LOGIN/CADASTRO ======================== -->
+  <div id="tipoLogin" class="container" style="display: flex;">
+    <div class="box">
+      <h2>Bem Vindo!</h2>
+      <br>
+      <div class="btn-group">
+        <!-- Corrigido para bater com JS -->
+        <button onclick="mostrarLogin('cliente')">Cliente</button>
+        <button onclick="mostrarLogin('adm')">Barbeiro</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Administrador -->
+  <div id="loginAdm" class="container" style="display: none;">
+    <div class="box">
+      <h2>Barbeiro</h2>
+      <div class="input-group">
+        <label for="admUsuario">Usuário</label>
+        <input type="text" id="admUsuario" placeholder="Usuário" />
+      </div>
+      <div class="input-group">
+        <label for="admSenha">Senha</label>
+        <input type="password" id="admSenha" placeholder="Senha" />
+      </div>
+      <button onclick="loginAdm()">Entrar</button>
+      <p><a href="#" onclick="voltarTipoLogin()">Voltar</a></p>
+    </div>
+  </div>
+
+  <!-- Login Cliente -->
+  <div id="loginCliente" class="container" style="display: none;">
+    <div class="box">
+      <h2>Login Cliente</h2>
+      <div class="input-group">
+        <label for="clienteNomeLogin">Nome ou Apelido</label>
+        <input type="text" id="clienteNomeLogin" placeholder="Nome ou Apelido" />
+      </div>
+      <div class="input-group">
+        <label for="clienteSenhaLogin">Senha</label>
+        <input type="password" id="clienteSenhaLogin" placeholder="Senha" />
+      </div>
+      <button onclick="loginCliente()">Entrar</button>
+      <p>Ou <a href="#" onclick="mostrarCadastroCliente()">Cadastrar-se</a></p>
+      <p><a href="#" onclick="voltarTipoLogin()">Voltar</a></p>
+    </div>
+  </div>
+
+  <!-- Cadastro Cliente -->
+  <div id="cadastroCliente" class="container" style="display: none;">
+    <div class="box">
+      <h2>Cadastro Cliente</h2>
+      <div class="input-group">
+        <label for="clienteNomeCadastro">Nome</label>
+        <input type="text" id="clienteNomeCadastro" placeholder="Nome ou Apelido" />
+      </div>
+      <div class="input-group">
+        <label for="clienteSenhaCadastro">Crie uma senha</label>
+        <input type="password" id="clienteSenhaCadastro" placeholder="Crie uma senha" />
+      </div>
+      <button onclick="cadastrarCliente()">Cadastrar</button>
+      <p><a href="#" onclick="voltarLoginCliente()">Voltar para Login</a></p>
+    </div>
+  </div>
+
+  <!-- ======================= APP PRINCIPAL ======================== -->
+  <div id="app" class="main" style="display: none;">
+    <div class="menu" id="menu"></div>
+    <div class="content" id="conteudo">
+      <!-- Inicialmente vazio, será preenchido pelo JS -->
+    </div>
+  </div>
+
+  <!-- ======================= CARRINHO FLUTUANTE ======================== -->
+  <div id="cartBadge" class="cart-badge" onclick="toggleCart()" style="display:none;">0</div>
+  <div id="cartSidebar" class="cart-sidebar">
+    <h3>Meu Carrinho</h3>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-total" id="cartTotal">Total: R$ 0,00</div>
+    <div class="cart-actions">
+      <button class="checkout-btn">Finalizar Compra</button>
+      <button class="close-btn" onclick="toggleCart()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- ======================= NOTIFICAÇÕES ======================== -->
+  <div
