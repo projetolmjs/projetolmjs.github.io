@@ -75,12 +75,19 @@
   </div>
 
   <!-- ======================= APP PRINCIPAL ======================== -->
-  <div id="app" class="main" style="display: none;">
-    <div class="menu" id="menu"></div>
-    <div class="content" id="conteudo">
-      <!-- Inicialmente vazio, será preenchido pelo JS -->
-    </div>
+<div id="app" class="main" style="display: none;">
+  <div class="menu-container">
+    <!-- Botão/ícone do menu -->
+    <img src="imagens/barber.png" alt="Menu" id="menuToggle" class="menu-icon">
+
+    <!-- Menu lateral -->
+    <div class="side-menu" id="menu"></div>
   </div>
+  <div class="content" id="conteudo">
+    <!-- Inicialmente vazio -->
+  </div>
+</div>
+
 
   <!-- ======================= CARRINHO FLUTUANTE ======================== -->
   <div id="cartBadge" class="cart-badge" onclick="toggleCart()" style="display:none;">0</div>
@@ -95,4 +102,7 @@
   </div>
 
   <!-- ======================= NOTIFICAÇÕES ======================== -->
-  <div
+  <div id="notification" class="notification"></div>
+</body>
+</html>
+
