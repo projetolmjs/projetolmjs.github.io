@@ -115,17 +115,17 @@ button:hover {
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 100%;
-  height: 50px;
-  min-width: 0;
-  padding: 0 12px;
+  width: 100%;          /* ocupa toda largura do menu */
+  height: 50px;         /* altura fixa para todos os itens */
+  min-width: 0;         /* previne expansão por texto grande */
+  padding: 0 12px;      /* padding horizontal */
   background: #222222;
   border-radius: 6px;
   font-weight: bold;
   color: #ffd700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;      /* impede quebra de linha */
+  overflow: hidden;         /* esconde excesso de texto */
+  text-overflow: ellipsis;  /* mostra "..." se o texto for grande */
   transition: background 0.3s, color 0.3s;
 }
 
@@ -147,6 +147,49 @@ button:hover {
   background: #121212;
   color: #ffffff;
 }
+
+
+.menu-container {
+  position: relative;
+}
+
+.menu-icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.menu {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background: #202020;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu.hidden {
+  display: none;
+}
+
+.menu button {
+  padding: 10px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.menu button:hover {
+  background: #444;
+}
+
+
+
 
 /* ==========================
    SEÇÃO INÍCIO
@@ -322,35 +365,51 @@ button:hover {
   margin-top: 10px;
 }
 
-/* ==========================
-   RESPONSIVO MOBILE
-========================== */
-@media screen and (max-width: 480px) {
-  .main { flex-direction: column; height: auto; }
-  .menu { width: 100%; padding: 10px 5px; display: flex; overflow-x: auto; border-radius: 6px; }
-  .menu ul { flex-direction: row; gap: 5px; }
-  .menu li { flex: 0 0 auto; }
-  .menu a { font-size: 12px; height: 36px; padding: 0 6px; }
-  .content { padding: 10px; }
-  .inicio-container { flex-direction: column; align-items: center; text-align: center; }
-  .inicio-foto { width: 120px; margin-bottom: 8px; }
-  .inicio h2 { font-size: 16px; }
-  .produtos-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
-  .produto { padding: 10px; }
-  .produto img { height: 120px; }
-  .produto h3 { font-size: 14px; }
-  .produto p { font-size: 12px; }
-  .produto button { font-size: 12px; padding: 5px 8px; }
-  .cart-badge { width: 35px; height: 35px; font-size: 12px; bottom: 12px; right: 12px; }
-  .cart-sidebar { width: 95%; padding: 12px; }
-  .cart-items { max-height: 250px; }
-  .cart-actions button { font-size: 12px; padding: 6px 8px; }
-  .pix-box { max-width: 100%; padding: 12px; }
-  .pix-box textarea { font-size: 12px; }
-  .pix-actions button { font-size: 12px; padding: 5px 6px; }
-  .box, .input-group input { width: 100%; font-size: 12px; padding: 6px; }
-  .notification { font-size: 12px; padding: 8px 12px; bottom: 60px; right: 8px; }
-  button { font-size: 12px; padding: 6px 10px; }
+/* Ícone do menu */
+.menu-icon {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  margin: 10px;
+  z-index: 1001;
+  position: relative;
 }
+
+/* Menu lateral */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -250px; /* escondido */
+  width: 220px;
+  height: 100%;
+  background: #202020;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.5);
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.side-menu.show {
+  left: 0; /* aparece com animação */
+}
+
+.side-menu button {
+  padding: 10px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.side-menu button:hover {
+  background: #444;
+}
+
 
 
