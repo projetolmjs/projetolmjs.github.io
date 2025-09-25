@@ -201,27 +201,45 @@ function montarMenu() {
 
   if (tipoLogado === "cliente") {
     menu.innerHTML = `
-      <button class="menu-btn" onclick="mostrarInicio()">🏠 Início</button>
-      <button class="menu-btn" onclick="mostrarProdutos()">🛍️ Produtos</button>
-      <button class="menu-btn" onclick="mostrarPlanos()">🧾 Planos</button>
-      <button class="menu-btn" onclick="mostrarValores()">💲 Tabela de Valores</button>
-      <button class="menu-btn" onclick="mostrarAgendamento()">📅 Agendar</button>
-      <button class="menu-btn" onclick="mostrarMeusAgendamentos()">📖 Meus Agendamentos</button>
-      <button class="menu-btn" onclick="toggleCarrinho()">🛒 Ver Carrinho</button>
-      <button class="menu-btn" onclick="sair()">🚪 Sair</button>
+      <button onclick="mostrarInicio()">🏠 Início</button>
+      <button onclick="mostrarProdutos()">🛍️ Produtos</button>
+      <button onclick="mostrarPlanos()">🧾 Planos</button>
+      <button onclick="mostrarValores()">💲 Tabela de Valores</button>
+      <button onclick="mostrarAgendamento()">📅 Agendar</button>
+      <button onclick="mostrarMeusAgendamentos()">📖 Meus Agendamentos</button>
+      <button onclick="toggleCarrinho()">🛒 Ver Carrinho</button>
+      <button onclick="sair()">🚪 Sair</button>
     `;
   } else {
     menu.innerHTML = `
-  <button class="menu-btn" onclick="mostrarDashboardAdm()">📊 Dashboard</button>
-  <button class="menu-btn" onclick="mostrarAgendamentosAdm()">📋 Agendamentos</button>
-  <button class="menu-btn" onclick="sair()">🚪 Sair</button>
-`;
-
+      <button onclick="mostrarDashboardAdm()">📊 Dashboard</button>
+      <button onclick="mostrarAgendamentosAdm()">📋 Agendamentos</button>
+      <button onclick="sair()">🚪 Sair</button>
+    `;
   }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  migrarFormasAntigas();
+  const badge = document.getElementById("cartBadge");
+  if (badge) badge.addEventListener("click", toggleCarrinho);
+
+  // controle do menu lateral
+  const toggle = document.getElementById("menuToggle");
+  const menu = document.getElementById("menu");
+  if (toggle && menu) {
+    toggle.addEventListener("click", () => {
+      menu.classList.toggle("show");
+    });
+  }
+});
+
+
+
 
   // garante o estilo/spacing do menu (sem mexer no seu CSS)
   injetarEstilosMenu();
-}
+
 
 function injetarEstilosMenu() {
   if (document.getElementById("menu-style-injected")) return;
@@ -790,6 +808,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const badge = document.getElementById("cartBadge");
   if (badge) badge.addEventListener("click", toggleCarrinho);
   // injeta estilo do menu assim que carregar
-  injetarEstilosMenu();
+ 
 });
+
+
 
