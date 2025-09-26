@@ -297,7 +297,7 @@ function mostrarInicio(){
       text-align:center; 
       padding:20px; 
       min-height:80vh;">
-      <img src="imagens/Logo.jpg.png" alt="Barbearia Brooklyn" style="max-width:250px; margin-bottom:20px;">
+      <img src="https://github.com/projetolmjs/projetolmjs.github.io/blob/main/logo.jpg.png?raw=true" alt="Barbearia Brooklyn" style="max-width:250px; margin-bottom:20px;">
       <h2>💈 Bem-vindo!!!</h2>
       <p> <strong>Na Barbearia Brooklyn</strong>  oferecemos mais do que cortes e barbas impecáveis: criamos um espaço para relaxar, conversar e se sentir em casa. Nossa missão é entregar uma experiência única a cada cliente, com técnica, estilo e cuidado excepcionais de profissionais apaixonados pelo que fazem.</p>
     </div>
@@ -884,6 +884,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // injeta estilo do menu assim que carregar
  
 });
+
 
 
 
