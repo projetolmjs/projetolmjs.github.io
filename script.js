@@ -297,7 +297,7 @@ function mostrarInicio(){
       text-align:center; 
       padding:20px; 
       min-height:80vh;">
-      <img src="https://github.com/projetolmjs/projetolmjs.github.io/blob/main/logo.jpg.png?raw=true" alt="Barbearia Brooklyn" style="max-width:250px; margin-bottom:20px;">
+      <img src="images/logo.jpg.png" alt="Barbearia Brooklyn" style="max-width:250px; margin-bottom:20px;">
       <h2>💈 Bem-vindo!!!</h2>
       <p> <strong>Na Barbearia Brooklyn</strong>  oferecemos mais do que cortes e barbas impecáveis: criamos um espaço para relaxar, conversar e se sentir em casa. Nossa missão é entregar uma experiência única a cada cliente, com técnica, estilo e cuidado excepcionais de profissionais apaixonados pelo que fazem.</p>
     </div>
@@ -393,9 +393,9 @@ function mostrarValores() {
 // PRODUTOS
 // ==============================
 const produtos = [
-  { nome: "Pomada Modeladora Premium", preco: 45, img: "imagens/pomada.jpeg" },
-  { nome: "Shampoo Antiqueda", preco: 30, img: "imagens/shampo.jpeg" },
-  { nome: "Óleo para Barba", preco: 35, img: "imagens/barba2.jpeg" }
+  { nome: "Pomada Modeladora Premium", preco: 45, img: "images/pomada.jpeg" },
+  { nome: "Shampoo Antiqueda", preco: 30, img: "images/shampo.jpeg" },
+  { nome: "Óleo para Barba", preco: 35, img: "images/barba2.jpeg" }
 ];
 
 function mostrarProdutos() {
@@ -884,6 +884,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // injeta estilo do menu assim que carregar
  
 });
+
 
 
 
