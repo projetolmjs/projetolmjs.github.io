@@ -4,6 +4,14 @@
 let clientes = []; // [{nome, senha}]
 let agendamentos = []; // [{usuario, data:'YYYY-MM-DD', hora:'HH:mm'}]
 let carrinho = []; // [{nome, preco, qtd}]
+let adm = []; // [admin , 123}]
+
+let barbeiros = [
+  { nome: "Rafael", usuario: "rafael", senha: "123456" , pix: "@rafael.luiz.silva29"},
+  { nome: "Alifer", usuario: "alifer", senha: "123456" },
+  { nome: "Jhonata", usuario: "jhonata", senha: "123456" }
+];
+
 
 function lerLS(chave, fallback) {
   try {
@@ -173,15 +181,18 @@ function loginCliente() {
   entrarApp();
 }
 
-function loginAdm() {
+
+ function loginAdm() {
   const u = document.getElementById("admUsuario").value.trim();
   const s = document.getElementById("admSenha").value.trim();
-  if (u === "admin" && s === "123") {
-    usuarioLogado = "Barbeiro";
-    tipoLogado = "adm";
-    entrarApp();
-  } else notificar("Usuário ou senha inválidos", "erro");
+  const b = barbeiros.find(b => b.usuario === u && b.senha === s);
+  if (!b) return notificar("Usuário ou senha inválidos", "erro");
+
+  usuarioLogado = b.nome; // o nome do barbeiro logado
+  tipoLogado = "adm";
+  entrarApp();
 }
+
 
 // ==============================
 // APP / MENU
@@ -306,13 +317,13 @@ function mostrarPlanos() {
         <h3>Plano Basico</h3>
         <p style="margin:8px 0;">💈 4 Cortes ou 4 Barbas</p>
         <p><strong>R$ 100,00</strong></p>
-        <button onclick="adicionarAoCarrinho('Plano Basico ( 4 Cortes ou 4 Barbas)', 59.90)">Assinar</button>
+        <button onclick="adicionarAoCarrinho('Plano Basico ( 4 Cortes ou 4 Barbas)', 100.00)">Assinar</button>
       </div>
       <div class="produto">
         <h3>Plano Premium</h3>
         <p style="margin:8px 0;">💈 4 Cortes + Barba</p>
         <p><strong>R$ 150</strong></p>
-        <button onclick="adicionarAoCarrinho('Plano Premium (4 cortes + barba)', 109.90)">Assinar</button>
+        <button onclick="adicionarAoCarrinho('Plano Premium (4 cortes + barba)', 150.00)">Assinar</button>
       </div>
       <div class="produto">
         <h3>Plano Brooklyn</h3>
@@ -320,10 +331,10 @@ function mostrarPlanos() {
                    4 Aplicação de Mascara +
                    4 Aplicação de Cera Quente</p>
         <p><strong>R$ 250</strong></p>
-        <button onclick="adicionarAoCarrinho('Plano VIP', 199.90)">Assinar</button>
+        <button onclick="adicionarAoCarrinho('Plano VIP', 250.00)">Assinar</button>
       </div>
     </div>
-    <small style="color:#777;display:block;margin-top:30px;">* Todos os Planos Acompanham Sombrancelha Enclusos.</small>
+    <small style="color:#777;display:block;margin-top:80px;">* Todos os Planos Acompanham Sombrancelha Inclusos.</small>
   `;
 }
 
@@ -404,6 +415,7 @@ function mostrarProdutos() {
     grid.appendChild(card);
   });
 }
+
 
 // ==============================
 // CARRINHO + PIX
@@ -668,70 +680,90 @@ function hojeYYYYMMDD(){
   const dd=String(d.getDate()).padStart(2,'0');
   return `${yyyy}-${mm}-${dd}`;
 }
-
-function mostrarAgendamento(){
+function mostrarAgendamento() {
   const c = document.getElementById("conteudo");
   c.innerHTML = `
     <h2>📅 Agendar horário</h2>
     <div class="box-agendamento">
       <label>Data</label>
       <input class="input-agendamento" type="date" id="dataAg" min="${hojeYYYYMMDD()}" value="${hojeYYYYMMDD()}"/>
+      
       <label>Hora</label>
       <select class="input-agendamento" id="horaAg"></select>
+
+      <label>Barbeiro</label>
+      <select class="input-agendamento" id="barbeiroAg">
+        ${barbeiros.map(b => `<option value="${b.nome}">${b.nome}</option>`).join('')}
+      </select>
+
       <button onclick="confirmarAgendamento()">Confirmar</button>
+
       <div>
-        <small style="color:#bbb">Horários ocupados nesta data:</small>
+        <small style="color:#bbb">Horários ocupados nesta data para o barbeiro:</small>
         <div id="ocupados" class="chips"></div>
       </div>
     </div>
   `;
   atualizarHorarios();
   document.getElementById("dataAg").addEventListener("change", atualizarHorarios);
+  document.getElementById("barbeiroAg").addEventListener("change", atualizarHorarios);
 }
 
-function atualizarHorarios(){
+
+function atualizarHorarios() {
   const data = document.getElementById("dataAg").value;
+  const barbeiro = document.getElementById("barbeiroAg").value;
   const select = document.getElementById("horaAg");
   const ocupadosDiv = document.getElementById("ocupados");
-  const ocupados = new Set(agendamentos.filter(a=>a.data===data).map(a=>a.hora));
+
+  const ocupados = new Set(
+    agendamentos
+      .filter(a => a.data === data && a.barbeiro === barbeiro)
+      .map(a => a.hora)
+  );
 
   select.innerHTML = "";
-  HORARIOS.forEach(h=>{
-    const opt=document.createElement("option");
-    opt.value=h;
-    opt.textContent=h;
-    if (ocupados.has(h)) {
-      opt.disabled = true;
-      opt.textContent = `${h} (ocupado)`;
-    }
+  HORARIOS.forEach(h => {
+    const opt = document.createElement("option");
+    opt.value = h;
+    opt.textContent = ocupados.has(h) ? `${h} (ocupado)` : h;
+    if (ocupados.has(h)) opt.disabled = true;
     select.appendChild(opt);
   });
 
   ocupadosDiv.innerHTML = "";
-  if (ocupados.size===0){
+  if (ocupados.size === 0) {
     ocupadosDiv.innerHTML = `<span class="chip">Nenhum horário ocupado</span>`;
   } else {
-    [...ocupados].sort().forEach(h=>{
-      const s=document.createElement("span");
-      s.className="chip busy";
-      s.textContent=h;
+    [...ocupados].sort().forEach(h => {
+      const s = document.createElement("span");
+      s.className = "chip busy";
+      s.textContent = h;
       ocupadosDiv.appendChild(s);
     });
   }
 }
 
-function confirmarAgendamento(){
+function confirmarAgendamento() {
   if (!usuarioLogado) return notificar("Faça login para agendar", "erro");
+
   const data = document.getElementById("dataAg").value;
   const hora = document.getElementById("horaAg").value;
-  if (!data || !hora) return notificar("Selecione data e hora", "erro");
-  const existe = agendamentos.some(a=>a.data===data && a.hora===hora);
-  if (existe) return notificar("Esse horário já está ocupado", "erro");
-  agendamentos.push({ usuario: usuarioLogado, data, hora });
+  const barbeiro = document.getElementById("barbeiroAg").value;
+
+  if (!data || !hora || !barbeiro) return notificar("Selecione data, hora e barbeiro", "erro");
+
+  const existe = agendamentos.some(a =>
+    a.data === data && a.hora === hora && a.barbeiro === barbeiro
+  );
+  if (existe) return notificar("Esse horário já está ocupado para o barbeiro escolhido", "erro");
+
+  agendamentos.push({ usuario: usuarioLogado, data, hora, barbeiro });
   salvarLS();
   notificar("Agendamento confirmado!", "sucesso");
   atualizarHorarios();
 }
+
 
 function mostrarMeusAgendamentos(){
   const c = document.getElementById("conteudo");
@@ -761,37 +793,41 @@ function cancelarAgendamento(data,hora){
   mostrarMeusAgendamentos();
 }
 
-function mostrarAgendamentosAdm(){
+function mostrarAgendamentosAdm() {
   const c = document.getElementById("conteudo");
-  c.innerHTML = `<h2>📋 Agendamentos</h2>`;
-  if (agendamentos.length===0){
-    c.innerHTML += `<p>Nenhum agendamento até o momento.</p>`;
+  c.innerHTML = `<h2>📋 Meus Agendamentos</h2>`;
+
+  const meus = agendamentos
+    .filter(a => a.barbeiro === usuarioLogado)
+    .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+
+  if (meus.length === 0) {
+    c.innerHTML += `<p>Você não possui agendamentos.</p>`;
     return;
   }
+
   const tbl = document.createElement("table");
-  tbl.className="table";
+  tbl.className = "table";
   tbl.innerHTML = `
-    <thead><tr>
-      <th>Cliente</th><th>Data</th><th>Hora</th><th>Ações</th>
-    </tr></thead>
+    <thead>
+      <tr><th>Cliente</th><th>Data</th><th>Hora</th><th>Ações</th></tr>
+    </thead>
     <tbody></tbody>
   `;
   const tb = tbl.querySelector("tbody");
-  agendamentos
-    .slice()
-    .sort((a,b)=> (a.data+a.hora).localeCompare(b.data+b.hora))
-    .forEach((a,idx)=>{
-      const tr=document.createElement("tr");
-      tr.innerHTML = `
-        <td>${a.usuario}</td>
-        <td>${a.data}</td>
-        <td>${a.hora}</td>
-        <td><button onclick="excluirAgendamento(${idx})">Excluir</button></td>
-      `;
-      tb.appendChild(tr);
-    });
+  meus.forEach((a, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${a.usuario}</td>
+      <td>${a.data}</td>
+      <td>${a.hora}</td>
+      <td><button onclick="excluirAgendamento(${idx})">Excluir</button></td>
+    `;
+    tb.appendChild(tr);
+  });
   c.appendChild(tbl);
 }
+
 
 function excluirAgendamento(index){
   agendamentos.splice(index,1);
@@ -799,6 +835,44 @@ function excluirAgendamento(index){
   notificar("Agendamento excluído", "sucesso");
   mostrarAgendamentosAdm();
 }
+
+
+// ===== Banco de Dados Simples =====
+const DB = {
+  clientes: lerLS("clientes", []),
+  barbeiros: lerLS("barbeiros", [
+    { nome: "Rafael", usuario: "rafael", senha: "123456" , pix: "@rafael.luiz.silva29"},
+    { nome: "????????", usuario: "????????1", senha: "123456" },
+    { nome: "????????2", usuario: "???????2", senha: "123456" }
+  ]),
+  agendamentos: lerLS("agendamentos", []),
+  pedidos: lerLS("pedidos", []),
+  carrinho: lerLS("carrinho", []),
+
+  salvar() {
+    localStorage.setItem("clientes", JSON.stringify(this.clientes));
+    localStorage.setItem("barbeiros", JSON.stringify(this.barbeiros));
+    localStorage.setItem("agendamentos", JSON.stringify(this.agendamentos));
+    localStorage.setItem("pedidos", JSON.stringify(this.pedidos));
+    localStorage.setItem("carrinho", JSON.stringify(this.carrinho));
+  }
+};
+
+// Exemplo de uso
+function adicionarCliente(nome, senha) {
+  DB.clientes.push({ nome, senha });
+  DB.salvar();
+}
+
+function adicionarAgendamento(usuario, barbeiro, data, hora) {
+  DB.agendamentos.push({ usuario, barbeiro, data, hora });
+  DB.salvar();
+}
+
+
+
+
+
 
 // ==============================
 // INIT
