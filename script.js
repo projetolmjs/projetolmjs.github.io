@@ -228,14 +228,17 @@ function montarMenu() {
       <button onclick="sair()">🚪 Sair</button>
     `;
   }
+
+  // Adiciona listener de fechamento automaticamente para **todos os botões recém-criados**
+  const menuBotoes = menu.querySelectorAll("button");
+  menuBotoes.forEach(btn => {
+    btn.addEventListener("click", () => {
+      menu.classList.remove("show");
+    });
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  migrarFormasAntigas();
-  const badge = document.getElementById("cartBadge");
-  if (badge) badge.addEventListener("click", toggleCarrinho);
-
-  // controle do menu lateral
   const toggle = document.getElementById("menuToggle");
   const menu = document.getElementById("menu");
   if (toggle && menu) {
@@ -243,6 +246,26 @@ document.addEventListener("DOMContentLoaded", () => {
       menu.classList.toggle("show");
     });
   }
+
+  montarMenu(); // monta menu na inicialização
+});
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  migrarFormasAntigas();
+
+  // badge do carrinho
+  const badge = document.getElementById("cartBadge");
+  if (badge) {
+    badge.addEventListener("click", () => {
+      const sidebar = document.getElementById("cartSidebar");
+      if (sidebar) sidebar.classList.toggle("active");
+    });
+  }
+
+  // injeta estilo do menu assim que carregar
+  injetarEstilosMenu();
 });
 
 
@@ -297,7 +320,7 @@ function mostrarInicio(){
       text-align:center; 
       padding:20px; 
       min-height:80vh;">
-      <img src="images/logo.jpg.png" alt="Barbearia Brooklyn" style="max-width:250px; margin-bottom:20px;">
+      <img src="imagens/Logo.jpg.png" alt="Barbearia Brooklyn" style="max-width:250px; margin-bottom:20px;">
       <h2>💈 Bem-vindo!!!</h2>
       <p> <strong>Na Barbearia Brooklyn</strong>  oferecemos mais do que cortes e barbas impecáveis: criamos um espaço para relaxar, conversar e se sentir em casa. Nossa missão é entregar uma experiência única a cada cliente, com técnica, estilo e cuidado excepcionais de profissionais apaixonados pelo que fazem.</p>
     </div>
@@ -390,31 +413,88 @@ function mostrarValores() {
 }
 
 // ==============================
-// PRODUTOS
+// PRODUTOS COM SUBMENU E BOTÃO ATIVO
 // ==============================
-const produtos = [
-  { nome: "Pomada Modeladora Premium", preco: 45, img: "images/pomada.jpeg" },
-  { nome: "Shampoo Antiqueda", preco: 30, img: "images/shampo.jpeg" },
-  { nome: "Óleo para Barba", preco: 35, img: "images/barba2.jpeg" }
-];
-
 function mostrarProdutos() {
   const c = document.getElementById("conteudo");
-  c.innerHTML = `<h2>🧴 Produtos</h2><div class="produtos-grid"></div>`;
-  const grid = c.querySelector(".produtos-grid");
+  c.innerHTML = `<h2>🧴 Produtos</h2><div id="submenu"></div><div id="produtos-grid"></div>`;
 
-  produtos.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "produto";
-    card.innerHTML = `
-      <img src="${p.img}" alt="${p.nome}" onerror="this.src=''; this.style.background='#333'; this.style.height='120px'">
-      <h3>${p.nome}</h3>
-      <p>R$ ${p.preco.toFixed(2)}</p>
-      <button onclick="adicionarAoCarrinho('${p.nome}', ${p.preco})">Adicionar ao carrinho</button>
-    `;
-    grid.appendChild(card);
-  });
+  const submenu = document.getElementById("submenu");
+  const grid = document.getElementById("produtos-grid");
+
+  const secoes = [
+    {
+      titulo: "💪 Pomadas e Gel",
+      produtos: [
+        { nome: "FOX FOR MEN  GEL COLA", preco: 25, img: "imagens/foxcola.jfif" },
+        { nome: "FOX FOR MEN  GEL BLACK", preco: 25, img: "imagens/foxblack.jfif" },
+        { nome: "FOX FOR MEN  GEL UVA", preco: 25, img: "imagens/foxuva.jfif" },
+        { nome: "FOX FOR MEN  CERA CARAMELO", preco: 25, img: "imagens/foxcaramelo.jfif" },
+        { nome: "FOX FOR MEN  PASTA CAFÉ", preco: 25, img: "imagens/foxcoffee.jfif" },
+        { nome: "MONACO FUTURE MEN PASTA MATTE", preco: 30, img: "imagens/monacomatte.jfif" },
+        { nome: "MONACO FUTURE MEN PASTA WHITE", preco: 30, img: "imagens/monacowhite.jfif" }
+        
+      ]
+    },
+    {
+      titulo: "🧔 Cuidados Com a Barba",
+      produtos: [
+        { nome: "VIKING MOUSSE", preco: 75, img: "imagens/mousseviking.jfif" },
+        { nome: "DONVITOR ÓLEO", preco: 30, img: "imagens/donvitor.jfif" }
+      ]
+    },
+    {
+      titulo: "🧴 Cremes e Cuidados",
+      produtos: [
+        { nome: "MENSHAPES PÓ MODELADOR", preco: 35, img: "imagens/pomodelador.jfif" }
+       
+      ]
+    }
+  ];
+
+  // Se já houver botões, não recriar
+  if (!submenu.dataset.inited) {
+    const botoes = [];
+    secoes.forEach((secao, i) => {
+      const btn = document.createElement("button");
+      btn.textContent = secao.titulo;
+      btn.className = "submenu-btn";
+      btn.addEventListener("click", () => mostrarProdutosSecao(i, botoes));
+      submenu.appendChild(btn);
+      botoes.push(btn);
+    });
+    submenu.dataset.inited = true;
+
+    // ativa a primeira seção
+    mostrarProdutosSecao(0, botoes);
+  }
+
+  function mostrarProdutosSecao(index, botoes) {
+    // Remove destaque de todos os botões
+    botoes.forEach(b => b.classList.remove("ativo"));
+    botoes[index].classList.add("ativo");
+
+    const secao = secoes[index];
+    grid.innerHTML = ""; // limpa grid
+    secao.produtos.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "produto";
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.nome}" onerror="this.src='imagens/placeholder.jpeg'">
+        <h4>${p.nome}</h4>
+        <p>${brl(p.preco)}</p>
+        <button onclick="adicionarAoCarrinho('${p.nome}', ${p.preco})">Adicionar</button>
+      `;
+      grid.appendChild(card);
+    });
+
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(160px, 1fr))";
+    grid.style.gap = "14px";
+    grid.style.marginTop = "20px";
+  }
 }
+
 
 
 // ==============================
@@ -528,13 +608,56 @@ function atualizarCarrinhoUI() {
     totalEl.parentNode.insertBefore(actions, totalEl.nextSibling);
   }
   actions.innerHTML = `
-    <button id="btnPixCheckout" ${carrinho.length===0?'disabled':''}
-      style="width:100%; padding:10px; border-radius:8px; border:0; background:#2e7d32; color:#fff; cursor:pointer; margin-top:8px;">
-      💳 Finalizar com PIX
-    </button>
+  <button id="btnPixCheckout" ${carrinho.length===0?'disabled':''}
+    style="width:100%; padding:10px; border-radius:8px; border:0; background:#2e7d32; color:#fff; cursor:pointer; margin-top:8px;">
+    💳 Pagar com PIX
+  </button>
+
+  <button id="btnCashCheckout" ${carrinho.length===0?'disabled':''}
+    style="width:100%; padding:10px; border-radius:8px; border:0; background:#fbc02d; color:#000; cursor:pointer; margin-top:8px;">
+    💰 Pagar em dinheiro ou cartão (no local)
+  </button>
+`;
+
+// PIX
+const btnPix = document.getElementById("btnPixCheckout");
+if (btnPix) btnPix.onclick = finalizarCompra;
+
+// Dinheiro/cartão no local
+const btnCash = document.getElementById("btnCashCheckout");
+if (btnCash) btnCash.onclick = () => {
+  const c = document.getElementById("conteudo");
+  c.innerHTML = `
+    <div class="pagamento-local" style="
+      max-width:500px; 
+      margin:40px auto; 
+      padding:20px; 
+      border-radius:12px; 
+      background:#fff;
+      text-align:center;
+      font-family:sans-serif;
+    ">
+      <h2 style="color:#000;">💰 Pagamento no local</h2>
+      <p style="color:#222; margin:12px 0;">
+        Só Aceitamos Pagamento Em  <strong>Dinheiro ou Cartão</strong> Em Nosso Estabelecimento!!!.
+      </p>
+      <button onclick="mostrarInicio()" style="
+        padding:10px 16px; 
+        border-radius:8px; 
+        border:0; 
+        background:#fbc02d; 
+        color:#000; 
+        cursor:pointer;
+        font-weight:bold;
+      ">
+        Voltar ao início
+      </button>
+    </div>
   `;
-  const btn = document.getElementById("btnPixCheckout");
-  if (btn) btn.onclick = finalizarCompra;
+};
+
+
+
 }
 
 function alterarQtd(nome, delta){
@@ -603,14 +726,53 @@ function finalizarCompra() {
     </div>
   `;
 
-  document.getElementById("btnCopyPix").onclick = async () => {
-    try {
-      await navigator.clipboard.writeText();
-      notificar("Código PIX copiado!", "sucesso");
-    } catch {
-      notificar("Não foi possível copiar. Selecione e copie manualmente.", "erro");
-    }
-  };
+
+  
+
+// Tela PIX
+c.innerHTML = `
+  <div class="pix-box" style="max-width:700px; margin:0 auto;">
+    <h2>💳 Pagamento PIX</h2>
+    <p>Total a pagar: <strong>${brl(total)}</strong></p>
+
+    <div class="pix-steps" style="display:grid; gap:12px;">
+      <label>Nome do pagador* <input id="pixNomePagador" class="input-agendamento" placeholder="Seu nome"></label>
+      <label>Celular/WhatsApp* <input id="pixContato" class="input-agendamento" placeholder="(11) 99999-9999"></label>
+      <label>Observação (opcional) <input id="pixObs" class="input-agendamento" placeholder="Ex.: Retirar no balcão"></label>
+    </div>
+
+    <div style="margin-top:14px; display:flex; gap:20px; align-items:center;">
+      <!-- QR Code fixo do barbeiro -->
+      <img src="URL_DO_QR_FIXO_AQUI" alt="QR Code PIX" style="width:150px; height:150px; border-radius:8px; border:1px solid #ccc;">
+      
+      <!-- Código PIX fixo -->
+      <div style="flex:1;">
+        <p>Copie o código abaixo ou escaneie o QR:</p>
+        <textarea id="pixCode" readonly style="width:100%; min-height:130px;">@rafael.luiz.silva29</textarea>
+        <button id="btnCopyPix" style="padding:10px 12px; border-radius:8px; border:0; background:#1565c0; color:#fff; cursor:pointer; margin-top:8px;">📋 Copiar Código</button>
+      </div>
+    </div>
+
+    <button id="btnValidarPix" style="padding:10px 12px; border-radius:8px; border:0; background:#2e7d32; color:#fff; cursor:pointer; margin-top:12px;">✅ Confirmar Pagamento</button>
+    <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:.95rem;">
+      <input type="checkbox" id="pixTermos">
+      Declaro que efetuei o pagamento PIX usando o código acima.
+    </label>
+  </div>
+`;
+
+// Botão copiar
+document.getElementById("btnCopyPix").onclick = async () => {
+  const pixCode = document.getElementById("pixCode").value; // pega o texto do textarea
+  try {
+    await navigator.clipboard.writeText(pixCode);
+    notificar("Código PIX copiado!", "sucesso");
+  } catch {
+    notificar("Não foi possível copiar. Selecione e copie manualmente.", "erro");
+  }
+};
+
+
 
   document.getElementById("btnValidarPix").onclick = () => {
     const nome = document.getElementById("pixNomePagador").value.trim();
@@ -884,6 +1046,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // injeta estilo do menu assim que carregar
  
 });
+
+
 
 
 
